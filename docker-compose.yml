@@ -1,0 +1,51 @@
+version: "3.9"
+
+services:
+  # ── Backend API ──────────────────────────────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: runtime
+    image: talentiq-backend:latest
+    container_name: talentiq-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - talentiq_db:/app/data
+    environment:
+      DATABASE_URL: sqlite:////app/data/talentiq.db
+      ENVIRONMENT: production
+      LOG_LEVEL: INFO
+      # Uncomment and fill to enable Google services:
+      # ENABLE_GEMINI: "true"
+      # GEMINI_API_KEY: "${GEMINI_API_KEY}"
+      # ENABLE_BIGQUERY: "true"
+      # GOOGLE_CLOUD_PROJECT: "${GOOGLE_CLOUD_PROJECT}"
+    env_file:
+      - ./backend/.env
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # ── Frontend ─────────────────────────────────────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: talentiq-frontend:latest
+    container_name: talentiq-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  talentiq_db:
+    driver: local

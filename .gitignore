@@ -1,0 +1,44 @@
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+
+# Environment
+.env
+
+# Node
+node_modules/
+**/node_modules/
+dist/
+build/
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# SQLite temp files
+*.db-shm
+*.db-wal
+# Node
+node_modules/
+**/node_modules/
+
+# Python
+.venv/
+venv/
+
+# Environment
+.env
+
+# Cache
+__pycache__/
